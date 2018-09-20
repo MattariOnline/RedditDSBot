@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.6
 
 """Main entrance to discord scan"""
 
@@ -135,7 +135,7 @@ def handle_submission(subm):
         subm: The praw.models.reddit.Submission object
     """
 
-    print(f'Handling submission {subm.title} by {subm.author.name if subm.author else None} (link={subm.permalink})')
+    print(f'Handling submission {subm.id} by {subm.author.name if subm.author else None} (link={subm.url})')
 
     if subm.is_self:
         print('  Ignoring; it is a self-post')

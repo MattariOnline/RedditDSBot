@@ -157,7 +157,7 @@ def handle_submission(subm):
 
         if official_link is None or not is_official_link(official_link):
             print('  Ignoring; the final url was not an official link')
-            pass
+            return
 
     assert is_official_link(official_link)
 

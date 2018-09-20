@@ -93,10 +93,12 @@ def follow_redir_link(link):
 
     cur_url = link
     def try_follow_redirect():
+        nonlocal cur_url
+
         result = None
         try:
             result = redirects.follow(cur_url, is_whitelisted_redir)
-        except RedirectError as re:
+        except redirects.RedirectError as re:
             cur_url = re.url if re.url else cur_url
             raise re
 
@@ -117,6 +119,8 @@ def get_invite_from_code(code):
     """
 
     def try_get_invite_from_code():
+        nonlocal code
+        
         succ, retry, result = discord.get_invite_from_code(code)
         if succ:
             return True, result

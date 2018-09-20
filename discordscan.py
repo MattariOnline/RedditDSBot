@@ -167,10 +167,10 @@ def handle_submission(subm):
     invite = get_invite_from_code(code)
     if invite is None:
         print(f'  Found no invite corresponding with the code {code} - replying...')
-        #comment = submission.reply(config.response_message) TODO
-        #comment.mod.distinguish() TODO
+        comment = submission.reply(config.response_message)
+        comment.mod.distinguish()
         print('Done replying, removing')
-        #submission.mod.remove(spam=False) TODO
+        submission.mod.remove(spam=False)
         print('Done removing')
         return
 
@@ -181,9 +181,9 @@ def handle_submission(subm):
     if guild_id in blacklist.fetch():
         print('Server is blacklisted! Sending modmail...')
         msg = f'The user u/{subm.author.name if subm.author else None} tried making [this post]({subm.permalink}) for the banned server **{guild_name}** (Server ID: {guild_id}) in DiscordServers and was just caught by the bot.'
-        #subreddit.modmail.create('Blacklisted server attempting to post!', msg, 'SubredditGuardian') TODO
+        subreddit.modmail.create('Blacklisted server attempting to post!', msg, 'SubredditGuardian')
         print('Done sending, removing')
-        #submission.mod.remove(spam=False) TODO
+        submission.mod.remove(spam=False)
         print('Done removing')
         return
 
@@ -192,7 +192,7 @@ def handle_submission(subm):
         if (    submission.link_flair_text != 'Discord Partner'
              or submission.link_flair_css_class != 'partner-post'
         ):
-            #submission.flair.select(config.flair_id) TODO
+            submission.flair.select(config.flair_id)
             print('Flaired post as Discord Partner!')
         else:
             print('Post already has flair.')

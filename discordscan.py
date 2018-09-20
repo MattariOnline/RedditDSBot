@@ -128,6 +128,9 @@ def get_invite_from_code(code):
 def handle_submission(subm):
     """Performs any actions that are necessary for the given submission.
 
+    It may delete the submission, flair the submission, or otherwise perform
+    moderator actions against the submission.
+
     Args:
         subm: The praw.models.reddit.Submission object
     """

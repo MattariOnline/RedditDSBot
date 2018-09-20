@@ -138,7 +138,7 @@ def reply_and_delete_submission(subm):
     Args:
         subm: The praw.models.reddit.Submission object
     """
-    
+
     comment = submission.reply(config.response_message)
     comment.mod.distinguish()
     print('Done replying, removing')
@@ -171,11 +171,7 @@ def handle_submission(subm):
 
     official_link = subm.url
     if is_whitelisted_redir(official_link):
-        succ, new_link = follow_redir_link(official_link)
-        if not succ:
-            print(f'  Failed to follow the redirect chain, ignoring for now.')
-            return
-        official_link = new_link
+        official_link = follow_redir_link(official_link)
         print(f'  After following redirects found final url {official_link}')
 
 

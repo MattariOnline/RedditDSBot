@@ -129,6 +129,22 @@ def get_invite_from_code(code):
 
     return retry.until_success(try_get_invite_from_code)
 
+def reply_and_delete_submission(subm):
+    """Responds with the default message, distinguishes response, and deletes
+
+    This is the correct course of action for a link to an invalid discord channel,
+    or a link to a redirector that does not lead to a valid discord channel.
+
+    Args:
+        subm: The praw.models.reddit.Submission object
+    """
+    
+    comment = submission.reply(config.response_message)
+    comment.mod.distinguish()
+    print('Done replying, removing')
+    submission.mod.remove(spam=False)
+    print('Done removing')
+
 def handle_submission(subm):
     """Performs any actions that are necessary for the given submission.
 
@@ -164,7 +180,8 @@ def handle_submission(subm):
 
 
         if official_link is None or not is_official_link(official_link):
-            print('  Ignoring; the final url was not an official link')
+            print('  Since that is not a valid discord link, replying and deleting...')
+            reply_and_delete_submission(subm)
             return
 
     assert is_official_link(official_link)
@@ -175,11 +192,7 @@ def handle_submission(subm):
     invite = get_invite_from_code(code)
     if invite is None:
         print(f'  Found no invite corresponding with the code {code} - replying...')
-        comment = submission.reply(config.response_message)
-        comment.mod.distinguish()
-        print('Done replying, removing')
-        submission.mod.remove(spam=False)
-        print('Done removing')
+        reply_and_delete_submission(subm)
         return
 
 

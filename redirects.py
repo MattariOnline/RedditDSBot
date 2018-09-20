@@ -29,7 +29,7 @@ def find_redirect(response):
         redirect is found.
     """
     global redir_codes
-    
+
     if response.status_code in redir_codes:
         redir_url = response.headers['Location']
         print(f'{response.url} uses {response.status_code} to redirect to {redir_url}')
@@ -46,7 +46,7 @@ def find_redirect(response):
             if url.startswith('='): # Fix more messy Django crap (Discord.st)
                 url = url[1:]
             print(response.url, 'uses meta property ->', url)
-            return True, url
+            return url
 
     return None
 

@@ -28,10 +28,6 @@ def is_official_link(link):
         True if the link is a link to discord, False otherwise.
     """
 
-    # If link is a tuple, grab the link string object
-    if isinstance(link, tuple):
-        link = link[1]
-
     return (link.startswith('http://discord.gg')
         or link.startswith('https://discord.gg')
         or link.startswith('http://discordapp.com')
@@ -46,7 +42,7 @@ def get_code_from_official_link(link):
     Returns:
         The string code that the invite link uses.
     """
-    
+
     if link.endswith('/'):
         return link.rsplit('/', 2)[-2]
 

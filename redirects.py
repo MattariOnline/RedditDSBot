@@ -57,7 +57,7 @@ def _follow(url, predicate, tries=1, max_redirects=5):
 
     response = None
     try:
-        response = requests.get(link, allow_redirects=False, timeout=10)
+        response = requests.get(url, allow_redirects=False, timeout=10)
     except requests.exceptions.ConnectionError as ce:
         raise RedirectError('Connection failure', url) from ce
     except requests.exceptions.ReadTimeout as rte:

@@ -27,6 +27,10 @@ def is_official_link(link):
     Returns:
         True if the link is a link to discord, False otherwise.
     """
+    
+    # If link is a tuple, grab the link string object
+    if isinstance(link, tuple):
+        link = link[1]
 
     return (link.startswith('http://discord.gg')
         or link.startswith('https://discord.gg')
@@ -42,6 +46,10 @@ def get_code_from_official_link(link):
     Returns:
         The string code that the invite link uses.
     """
+    
+    # If link is a tuple, grab the link string object
+    if isinstance(link, tuple):
+        link = link[1]
 
     if link.endswith('/'):
         return link.rsplit('/', 2)[-2]
@@ -57,6 +65,10 @@ def is_whitelisted_redir(link):
     Returns:
         True if the url is a whitelisted redirector, False otherwise.
     """
+    
+    # If link is a tuple, grab the link string object
+    if isinstance(link, tuple):
+        link = link[1]
 
     return (link.startswith('http://discord.plus')
         or link.startswith('https://discord.plus')
@@ -139,7 +151,7 @@ def handle_submission(subm):
         subm: The praw.models.reddit.Submission object
     """
 
-    print(f'Handling submission {subm.id} by {subm.author.name if subm.author else None} (link={subm.url})')
+    print(f'Handling submission {subm.id} by {subm.author.name if subm.author else None}\r\n  Link: {subm.url}')
 
     if subm.is_self:
         print('  Ignoring; it is a self-post')
@@ -180,7 +192,7 @@ def handle_submission(subm):
 
     guild_name = invite['guild']['name']
     guild_id = invite['guild']['id']
-    print(f'  Detected that {code} is valid and corresponds with guild {guild_name} (id={guild_id})')
+    print(f'  Valid! Code {code} = {guild_name} (ID: {guild_id})')
     if guild_id in blacklist.fetch():
         print('Server is blacklisted! Sending modmail...')
         msg = f'The user u/{subm.author.name if subm.author else None} tried making [this post]({subm.permalink}) for the banned server **{guild_name}** (Server ID: {guild_id}) in DiscordServers and was just caught by the bot.'

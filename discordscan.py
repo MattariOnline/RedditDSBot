@@ -27,7 +27,7 @@ def is_official_link(link):
     Returns:
         True if the link is a link to discord, False otherwise.
     """
-    
+
     # If link is a tuple, grab the link string object
     if isinstance(link, tuple):
         link = link[1]
@@ -47,10 +47,6 @@ def get_code_from_official_link(link):
         The string code that the invite link uses.
     """
     
-    # If link is a tuple, grab the link string object
-    if isinstance(link, tuple):
-        link = link[1]
-
     if link.endswith('/'):
         return link.rsplit('/', 2)[-2]
 
@@ -65,10 +61,6 @@ def is_whitelisted_redir(link):
     Returns:
         True if the url is a whitelisted redirector, False otherwise.
     """
-    
-    # If link is a tuple, grab the link string object
-    if isinstance(link, tuple):
-        link = link[1]
 
     return (link.startswith('http://discord.plus')
         or link.startswith('https://discord.plus')
@@ -132,7 +124,7 @@ def get_invite_from_code(code):
 
     def try_get_invite_from_code():
         nonlocal code
-        
+
         succ, retry, result = discord.get_invite_from_code(code)
         if succ:
             return True, result
@@ -167,8 +159,13 @@ def handle_submission(subm):
 
     official_link = subm.url
     if is_whitelisted_redir(official_link):
-        official_link = follow_redir_link(official_link)
+        succ, new_link = follow_redir_link(official_link)
+        if not succ:
+            print(f'  Failed to follow the redirect chain, ignoring for now.')
+            return
+        official_link = new_link
         print(f'  After following redirects found final url {official_link}')
+
 
         if official_link is None or not is_official_link(official_link):
             print('  Ignoring; the final url was not an official link')

@@ -6,7 +6,7 @@ import discord
 import redirects
 import retry
 import config
-import blacklist
+from stringlist import StringList
 import time
 import praw
 import string # for variable "print_safe_name"
@@ -179,6 +179,7 @@ def handle_submission(subm):
     Args:
         subm: The praw.models.reddit.Submission object
     """
+    global blacklist
 
     print(f'Handling submission {subm.id} by {subm.author.name if subm.author else None}\r\n  Link: {subm.url}')
 
@@ -321,6 +322,9 @@ print('Connecting to database')
 database.connect(config.database_file)
 database.create_missing_tables()
 database.prune()
+
+print('Fetching lists')
+blacklist = StringList('blacklist.txt')
 
 print('Logging in')
 reddit = praw.Reddit(client_id=auth_config.client_id,

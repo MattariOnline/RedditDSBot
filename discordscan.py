@@ -10,6 +10,8 @@ import blacklist
 import time
 import praw
 import string # for variable "print_safe_name"
+import database
+import math
 
 try:
     import auth_config
@@ -130,7 +132,7 @@ def get_invite_from_code(code):
 
     return retry.until_success(try_get_invite_from_code)
 
-def reply_and_delete_submission(subm):
+def reply_and_delete_submission(subm, msg = None, indent = '   '):
     """Responds with the default message, distinguishes response, and deletes
 
     This is the correct course of action for a link to an invalid discord channel,
@@ -138,13 +140,34 @@ def reply_and_delete_submission(subm):
 
     Args:
         subm: The praw.models.reddit.Submission object
+        msg: The string message to reply with, or None for config.response_message
+        indent: The indent to use for logging, defaults to 4 spaces
     """
 
-    comment = submission.reply(config.response_message)
+    if msg is None:
+        msg = config.response_message
+
+    if config.dry_run:
+        print(f'{indent}Would reply and remove, but dry-run is set. Waiting 2 seconds instead')
+        time.sleep(2)
+        return
+
+    comment = submission.reply(msg)
     comment.mod.distinguish()
-    print('Done replying, removing')
+    print(f'{indent}Done replying, removing')
     submission.mod.remove(spam=False)
-    print('Done removing')
+    print(f'{indent}Done removing')
+
+def make_printable(str):
+    """Takes a string and makes it printable
+
+    Args:
+        str: The string to make printable
+
+    Returns:
+        The string with all weird characters filtered
+    """
+    return ''.join(filter(lambda x: x in set(string.printable), str))
 
 def handle_submission(subm):
     """Performs any actions that are necessary for the given submission.
@@ -166,9 +189,26 @@ def handle_submission(subm):
         print(f'  Ignoring; the submission was removed by {subm.banned_by}')
         return
 
+    if subm.approved_by is not None and subm.approved_by != 'AutoModerator':
+        print(f'  Ignoring; the submission was approved by {subm.approved_by}')
+        return
+
     if not is_discord_or_discord_redirect_link(subm.url):
         print(f'  Ignoring; the submission links to {subm.url} which is unrecognized')
         return
+
+    advert = database.fetch_advert_by_fullname(subm.fullname)
+    group = None
+    if advert is not None:
+        time_since_touched = time.time() - advert['updated_at']
+        group = database.fetch_group_by_id(advert['group_id'])
+        old_group_name_printable = make_printable(group['dgroup_name'])
+        if time_since_touched < config.post_update_time_seconds:
+            print(f'  Ignoring; We have seen this post before (goes to {old_group_name_printable}) and checked it only {time_since_touched} seconds ago')
+            return
+
+        time_since_checked_mins = round(time_since_touched / 60)
+        print(f'  When we checked this about {time_since_checked_mins} minutes ago and it went to {old_group_name_printable}')
 
     official_link = subm.url
     if is_whitelisted_redir(official_link):
@@ -195,15 +235,21 @@ def handle_submission(subm):
 
     guild_name = invite['guild']['name']
     guild_id = invite['guild']['id']
-    print_safe_name = ''.join(filter(lambda x: x in set(string.printable), guild_name))
+    print_safe_name = make_printable(guild_name)
     print(f'  Valid! Code {code} = {print_safe_name} (ID: {guild_id})')
     if guild_id in blacklist.fetch():
-        print('Server is blacklisted! Sending modmail...')
-        msg = f'The user u/{subm.author.name if subm.author else None} tried making [this post]({subm.permalink}) for the banned server **{guild_name}** (Server ID: {guild_id}) in DiscordServers and was just caught by the bot.'
+        print('  Server is blacklisted! Sending modmail...')
+
+        if config.dry_run:
+            print('  Would send modmail but this is a dry run; waiting 2 seconds instead')
+            time.sleep(2)
+            return
+
+        msg = f'The user u/{subm.author.name if subm.author else None} tried making [this post](reddit.com{subm.permalink}) for the banned server **{guild_name}** (Server ID: {guild_id}) in DiscordServers and was just caught by the bot.'
         subreddit.modmail.create('Blacklisted server attempting to post!', msg, 'SubredditGuardian')
-        print('Done sending, removing')
+        print('    Done sending, removing')
         submission.mod.remove(spam=False)
-        print('Done removing')
+        print('    Done removing')
         return
 
     if 'VIP_REGIONS' in invite['guild']['features']:
@@ -211,10 +257,72 @@ def handle_submission(subm):
         if (    submission.link_flair_text != 'Discord Partner'
              or submission.link_flair_css_class != 'partner-post'
         ):
-            submission.flair.select(config.flair_id)
-            print('Flaired post as Discord Partner!')
+            if not config.dry_run:
+                submission.flair.select(config.flair_id)
+                print('    Flaired post as Discord Partner!')
+            else:
+                print('    Would have flaired as Discord Partner but this is a dry-run')
         else:
-            print('Post already has flair.')
+            print('    Post already has flair.')
+
+    if not advert:
+        _group = database.fetch_group_by_dgroup_id(guild_id)
+        if _group is not None:
+            old_adverts = database.fetch_adverts_by_group_id(_group['id'])
+
+            for old_advert in old_adverts:
+                assert(old_advert['fullname'] != subm.fullname)
+                time_since = subm.created_utc - old_advert['posted_at']
+                if time_since > 0 and time_since < config.min_time_between_posts_seconds:
+                    old_permalink = old_advert['permalink']
+                    hours_since = math.floor(time_since / (60*60))
+                    minutes_since = math.floor((time_since - hours_since) / 60)
+                    padding_0 = '0' if minutes_since < 10 else ''
+                    print(f'  Detected that the post was too soon after the last post')
+                    print(f'    Old permalink: {old_permalink}')
+                    print(f'    Time since: {hours_since}:{padding_0}{minutes_since} (hours:minutes)')
+                    print('  Replying and deleting...')
+                    reply_and_delete_submission(subm, msg = config.too_soon_response_message)
+                    return
+
+    if advert:
+        assert(group is not None)
+        old_print_safe_name = make_printable(group['dgroup_name'])
+        old_guild_id = group['dgroup_id']
+
+        if guild_id != old_guild_id:
+            print(f'  Detected that this advert changed from {old_print_safe_name} to {print_safe_name}')
+            print('  This shouldn\'t happen, sending modmail and deleting')
+
+            if config.dry_run:
+                print('    This is a dry-run so waiting 2 seconds instead')
+                time.sleep(2)
+                return
+
+            msg = f'The user u/{subm.author.name if subm.author else None} made [this post](reddit.com{subm.permalink}) which changed from a link to {old_print_safe_name} (Server ID = {old_guild_id}) to {print_safe_name} (Server ID = {guild_id}). This is peculiar. I will delete it with no comment'
+            subreddit.modmail.create('Server link changed servers', msg, 'SubredditGuardian')
+            print('    Done sending, removing')
+            submission.mod.remove(spam=False)
+            print('    Done removing')
+            return
+
+        database.touch_advert(advert['id'])
+    else:
+        assert(group is None)
+
+        group = database.fetch_group_by_dgroup_id(guild_id)
+        if group is None:
+            database.save_group(guild_name, guild_id)
+            group = database.fetch_group_by_dgroup_id(guild_id)
+
+        assert(group is not None)
+        database.save_advert(subm.fullname, subm.permalink, group['id'], subm.created_utc)
+
+
+print('Connecting to database')
+database.connect(config.database_file)
+database.create_missing_tables()
+database.prune()
 
 print('Logging in')
 reddit = praw.Reddit(client_id=auth_config.client_id,
@@ -226,6 +334,7 @@ reddit = praw.Reddit(client_id=auth_config.client_id,
 subreddit = reddit.subreddit(config.subreddit_name)
 recently_checked_subm_ids = []
 hot_check_counter = 0
+last_prune_time = time.time()
 
 # CHECK SUBREDDIT FLAIRS BEFORE STARTING
 #for template in subreddit.flair.link_templates:
@@ -258,3 +367,8 @@ while True:
         time.sleep(config.loop_sleep_time_seconds)
     else:
         hot_check_counter -= 1
+
+    if last_prune_time + config.database_prune_period_seconds < time.time():
+        print('Pruning database')
+        database.prune()
+        last_prune_time = time.time()

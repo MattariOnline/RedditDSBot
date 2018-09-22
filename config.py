@@ -9,6 +9,13 @@ If you think this bot has made a mistake, please contact us [here](https://www.r
 Sincerely,
 The r/DiscordServers Team'''
 
+too_soon_response_message = '''You have posted an advert to this channel too recently.
+
+If you think this bot has made a mistake, please contact us [here](https://www.reddit.com/message/compose?to=%2Fr%2Fdiscordservers).
+
+Sincerely,
+The r/DiscordServers Team'''
+
 loop_sleep_time_seconds = 30
 check_sleep_time_seconds = 5
 loops_per_hot_check = 10
@@ -39,3 +46,15 @@ max_posts_until_miss_in_new = 100
 # how many hot posts we ensure are valid. Posts after this in hot
 # may become invalid without the bot noticing. max 1000.
 num_hot_posts_to_rescan = 1000
+
+# The time in seconds we wait before we verify a link is still working
+post_update_time_seconds = 60 * 15
+
+min_time_between_posts_seconds = 60 * 60 * 24
+
+# DATABASE RELATED STUFF
+database_file = 'dsbot.db'
+database_prune_period_seconds = 60 * 60
+
+# MISC
+dry_run = False

@@ -9,6 +9,7 @@ import config
 import blacklist
 import time
 import praw
+import string # for variable "print_safe_name"
 
 try:
     import auth_config
@@ -194,7 +195,8 @@ def handle_submission(subm):
 
     guild_name = invite['guild']['name']
     guild_id = invite['guild']['id']
-    print(f'  Valid! Code {code} = {guild_name} (ID: {guild_id})')
+    print_safe_name = ''.join(filter(lambda x: x in set(string.printable), guild_name))
+    print(f'  Valid! Code {code} = {print_safe_name} (ID: {guild_id})')
     if guild_id in blacklist.fetch():
         print('Server is blacklisted! Sending modmail...')
         msg = f'The user u/{subm.author.name if subm.author else None} tried making [this post]({subm.permalink}) for the banned server **{guild_name}** (Server ID: {guild_id}) in DiscordServers and was just caught by the bot.'

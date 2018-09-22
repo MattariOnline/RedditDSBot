@@ -28,7 +28,7 @@ class StringList:
             filename: The name of the file (typically with extension .txt)
         """
         self.file_name = file_name
-        self.file_path = os.path.dirname(os.path.realpath(__file__)) + "\\" + file_name
+        self.file_path = os.path.dirname(os.path.realpath(__file__)) + "/" + file_name
         self.cached_list = None
         self.cached_stamp = None
 

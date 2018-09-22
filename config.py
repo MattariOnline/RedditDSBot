@@ -9,9 +9,11 @@ If you think this bot has made a mistake, please contact us [here](https://www.r
 Sincerely,
 The r/DiscordServers Team'''
 
-too_soon_response_message = '''You have posted an advert to this channel too recently.
+too_soon_response_message = '''You have posted this server too recently.
 
-If you think this bot has made a mistake, please contact us [here](https://www.reddit.com/message/compose?to=%2Fr%2Fdiscordservers).
+Time you still need to wait before you can post again: {0}
+
+If you are certain this bot has made a mistake, and not simply due to reddit's time estimations, please contact us [here](https://www.reddit.com/message/compose?to=%2Fr%2Fdiscordservers).
 
 Sincerely,
 The r/DiscordServers Team'''

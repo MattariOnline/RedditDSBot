@@ -278,10 +278,12 @@ def handle_submission(subm):
                     hours_since = math.floor(time_since / (60*60))
                     minutes_since = math.floor((time_since - hours_since) / 60)
                     padding_0 = '0' if minutes_since < 10 else ''
+                    #time_until_next_post = config.min_time_between_posts_seconds - time_since
                     print(f'  Detected that the post was too soon after the last post')
                     print(f'    Old permalink: {old_permalink}')
                     print(f'    Time since: {hours_since}:{padding_0}{minutes_since} (hours:minutes)')
                     print('  Replying and deleting...')
+                    #reply_and_delete_submission(subm, msg = config.too_soon_response_message.format(time_until_next_post))
                     reply_and_delete_submission(subm, msg = config.too_soon_response_message)
                     return
 

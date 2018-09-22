@@ -1,7 +1,6 @@
 #!/usr/bin/env python3.6
 
 """Main entrance to discord scan"""
-""" Git fetch test 1 """
 
 import discord
 import redirects

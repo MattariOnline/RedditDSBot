@@ -1,3 +1,5 @@
+import os
+
 subreddit_name = 'DiscordServers'
 response_message = '''Your invite link has expired at r/DiscordServers.
 This means either you did not generate a permanent invite link or you have likely closed the server.
@@ -8,9 +10,9 @@ If you think this bot has made a mistake, please contact us [here](https://www.r
 Sincerely,
 The r/DiscordServers Team'''
 
-too_soon_response_message = '''You have posted this server too recently.
+too_soon_response_message = '''You made [this post]({perma_link}) for your server before the wait period was up.
 
-Time you still need to wait before you can post again: {0}
+Time you still need to wait before you can post again: {time_left}
 
 If you are certain this bot has made a mistake, and not due to reddit's time estimation, please contact us [here](https://www.reddit.com/message/compose?to=%2Fr%2Fdiscordservers).
 
@@ -54,7 +56,7 @@ post_update_time_seconds = 60 * 15
 min_time_between_posts_seconds = 60 * 60 * 24
 
 # DATABASE RELATED STUFF
-database_file = 'discordservers.db'
+database_file = os.path.join(os.path.dirname(__file__), 'discordservers.db')
 database_prune_period_seconds = 60 * 60
 
 # MISC

@@ -1,6 +1,7 @@
 __pycache__/*
 auth_config.py
 blacklist.txt
+whitelist.txt
 scriptwatcher.sh
 *.db
 *.journal

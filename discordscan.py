@@ -194,6 +194,11 @@ def handle_submission(subm):
     if subm.approved_by is not None and subm.approved_by != 'AutoModerator':
         print(f'  Ignoring; the submission was approved by {subm.approved_by}')
         return
+        
+    if subm.author is not None:
+        if subm.author.name in whitelist.fetch():
+            print(f'  Ignoring; the submission author is {subm.author.name}')
+            return
 
     if not is_discord_or_discord_redirect_link(subm.url):
         print(f'  Ignoring; the submission links to {subm.url} which is unrecognized')
@@ -281,7 +286,7 @@ def handle_submission(subm):
                     print(f'    Old permalink: {old_permalink}')
                     print(f'    Time since: {str(timedelta(seconds=time_since))}')
                     print('  Replying and deleting...')
-                    reply_and_delete_submission(subm, msg = config.too_soon_response_message.format(str(timedelta(seconds=(config.min_time_between_posts_seconds - time_since)))))
+                    reply_and_delete_submission(subm, msg = config.too_soon_response_message.format(perma_link = subm.permalink, time_left = str(timedelta(seconds=(config.min_time_between_posts_seconds - time_since)))))
                     return
 
     if advert:
@@ -325,6 +330,7 @@ database.prune()
 
 print('Fetching lists')
 blacklist = StringList('blacklist.txt')
+whitelist = StringList('whitelist.txt')
 
 print('Logging in')
 reddit = praw.Reddit(client_id=auth_config.client_id,

@@ -1,5 +1,4 @@
 subreddit_name = 'DiscordServers'
-#database_file = 'discordservers.flatdb' This doesn't do anything right now
 response_message = '''Your invite link has expired at r/DiscordServers.
 This means either you did not generate a permanent invite link or you have likely closed the server.
 You're welcome to post your server again provided it is a [permanent link](https://support.discordapp.com/hc/en-us/articles/208866998-Instant-Invite-101).
@@ -13,7 +12,7 @@ too_soon_response_message = '''You have posted this server too recently.
 
 Time you still need to wait before you can post again: {0}
 
-If you are certain this bot has made a mistake, and not simply due to reddit's time estimations, please contact us [here](https://www.reddit.com/message/compose?to=%2Fr%2Fdiscordservers).
+If you are certain this bot has made a mistake, and not due to reddit's time estimation, please contact us [here](https://www.reddit.com/message/compose?to=%2Fr%2Fdiscordservers).
 
 Sincerely,
 The r/DiscordServers Team'''
@@ -55,7 +54,7 @@ post_update_time_seconds = 60 * 15
 min_time_between_posts_seconds = 60 * 60 * 24
 
 # DATABASE RELATED STUFF
-database_file = 'dsbot.db'
+database_file = 'discordservers.db'
 database_prune_period_seconds = 60 * 60
 
 # MISC

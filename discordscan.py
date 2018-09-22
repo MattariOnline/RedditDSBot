@@ -12,6 +12,7 @@ import praw
 import string # for variable "print_safe_name"
 import database
 import math
+from datetime import timedelta
 
 try:
     import auth_config
@@ -275,16 +276,15 @@ def handle_submission(subm):
                 time_since = subm.created_utc - old_advert['posted_at']
                 if time_since > 0 and time_since < config.min_time_between_posts_seconds:
                     old_permalink = old_advert['permalink']
-                    hours_since = math.floor(time_since / (60*60))
-                    minutes_since = math.floor((time_since - hours_since) / 60)
-                    padding_0 = '0' if minutes_since < 10 else ''
+                    #hours_since = math.floor(time_since / (60*60))
+                    #minutes_since = math.floor((time_since - hours_since) / 60)
+                    #padding_0 = '0' if minutes_since < 10 else ''
                     #time_until_next_post = config.min_time_between_posts_seconds - time_since
                     print(f'  Detected that the post was too soon after the last post')
                     print(f'    Old permalink: {old_permalink}')
-                    print(f'    Time since: {hours_since}:{padding_0}{minutes_since} (hours:minutes)')
+                    print(f'    Time since: {str(timedelta(seconds=time_since))}')
                     print('  Replying and deleting...')
-                    #reply_and_delete_submission(subm, msg = config.too_soon_response_message.format(time_until_next_post))
-                    reply_and_delete_submission(subm, msg = config.too_soon_response_message)
+                    reply_and_delete_submission(subm, msg = config.too_soon_response_message.format(str(timedelta(seconds=(config.min_time_between_posts_seconds - time_since)))))
                     return
 
     if advert:

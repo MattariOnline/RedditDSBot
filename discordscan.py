@@ -181,7 +181,7 @@ def handle_submission(subm):
     """
     global blacklist
 
-    print(f'Handling submission {subm.id} by {subm.author.name if subm.author else None}\r\n  Link: {subm.url}')
+    print(f'Handling submission {subm.id} by {subm.author.name if subm.author else None}\n  Link: {subm.url}')
 
     if subm.is_self:
         print('  Ignoring; it is a self-post')

@@ -286,7 +286,7 @@ def handle_submission(subm):
                     print(f'    Old permalink: {old_permalink}')
                     print(f'    Time since: {str(timedelta(seconds=time_since))}')
                     print('  Replying and deleting...')
-                    reply_and_delete_submission(subm, msg = config.too_soon_response_message.format(perma_link = subm.permalink, time_left = str(timedelta(seconds=(config.min_time_between_posts_seconds - time_since)))))
+                    reply_and_delete_submission(subm, msg = config.too_soon_response_message.format(perma_link_new = subm.permalink, perma_link_old = old_permalink, time_left = str(timedelta(seconds=(config.min_time_between_posts_seconds - time_since)))))
                     return
 
     if advert:

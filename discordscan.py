@@ -252,7 +252,7 @@ def handle_submission(subm):
             time.sleep(2)
             return
 
-        msg = f'The user u/{subm.author.name if subm.author else None} tried making [this post](reddit.com{subm.permalink}) for the banned server **{guild_name}** (Server ID: {guild_id}) in DiscordServers and was just caught by the bot.'
+        msg = f'The user u/{subm.author.name if subm.author else None} tried making [this post]({subm.permalink}) for the banned server **{guild_name}** (Server ID: {guild_id}) in DiscordServers and was just caught by the bot.'
         subreddit.modmail.create('Blacklisted server attempting to post!', msg, 'SubredditGuardian')
         print('    Done sending, removing')
         submission.mod.remove(spam=False)

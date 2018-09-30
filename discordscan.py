@@ -64,8 +64,8 @@ def is_whitelisted_redir(link):
 
     return (link.startswith('http://discord.plus')
         or link.startswith('https://discord.plus')
-        or link.startswith('http://discord.me')
-        or link.startswith('https://discord.me')
+        (or link.startswith('http://discord.me') and not link.startswith('http://discord.me/password/'))
+        (or link.startswith('https://discord.me') and not link.startswith('https://discord.me/password/'))
         or link.startswith('http://discord.st')
         or link.startswith('https://discord.st'))
 
@@ -194,7 +194,7 @@ def handle_submission(subm):
     if subm.approved_by is not None and subm.approved_by != 'AutoModerator':
         print(f'  Ignoring; the submission was approved by {subm.approved_by}')
         return
-        
+
     if subm.author is not None:
         if subm.author.name in whitelist.fetch():
             print(f'  Ignoring; the submission author is {subm.author.name}')

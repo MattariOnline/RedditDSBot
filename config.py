@@ -1,9 +1,26 @@
 import os
 
 subreddit_name = 'DiscordServers'
+
 response_message = '''Your invite link has expired at r/DiscordServers.
+
 This means either you did not generate a permanent invite link or you have likely closed the server.
-*Note: if you use discord.me for your server links, we do not support their bot-check service for obvious reasons.*
+
+You're welcome to post your server again provided it is a [permanent link](https://support.discordapp.com/hc/en-us/articles/208866998-Instant-Invite-101).
+
+If you think this bot has made a mistake, please contact us [here](https://www.reddit.com/message/compose?to=%2Fr%2Fdiscordservers).
+
+Sincerely,
+The r/DiscordServers Team'''
+
+response_message_botcheck = '''Your invite link has expired at r/DiscordServers.
+
+This means either you did not generate a permanent invite link or you have likely closed the server.
+
+**Note:**  
+*If you use discord.me for your server links, we do not support their bot-check service for obvious reasons.*  
+*To fix this, turn off the "bot check" setting or link a discord.gg invite instead.*  
+*Optionally, (and as a shameless plug) we recommend [discord.plus](https://discord.plus) for custom invite links.*
 
 You're welcome to post your server again provided it is a [permanent link](https://support.discordapp.com/hc/en-us/articles/208866998-Instant-Invite-101).
 

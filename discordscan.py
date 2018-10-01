@@ -146,7 +146,10 @@ def reply_and_delete_submission(subm, msg = None, indent = '   '):
     """
 
     if msg is None:
-        msg = config.response_message
+        if (subm.url.startswith('http://discord.me') or subm.url.startswith('https://discord.me'):
+            msg = config.response_message_botcheck
+        else:
+            msg = config.response_message
 
     if config.dry_run:
         print(f'{indent}Would reply and remove, but dry-run is set. Waiting 2 seconds instead')

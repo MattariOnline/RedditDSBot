@@ -146,7 +146,7 @@ def reply_and_delete_submission(subm, msg = None, indent = '   '):
     """
 
     if msg is None:
-        if (subm.url.startswith('http://discord.me') or subm.url.startswith('https://discord.me'):
+        if (subm.url.startswith('http://discord.me') or subm.url.startswith('https://discord.me')):
             msg = config.response_message_botcheck
         else:
             msg = config.response_message

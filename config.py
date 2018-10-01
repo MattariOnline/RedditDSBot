@@ -17,9 +17,9 @@ response_message_botcheck = '''Your invite link has expired at r/DiscordServers.
 
 This means either you did not generate a permanent invite link or you have likely closed the server.
 
-**Note:**  
+>**Note:**  
 *If you use discord.me for your server links, we do not support their bot-check service for obvious reasons.*  
-*To fix this, turn off the "bot check" setting or link a discord.gg invite instead.*  
+*To fix this, turn off the "bot check" setting or use a discord.gg invite link instead.*  
 *Optionally, (and as a shameless plug) we recommend [discord.plus](https://discord.plus) for custom invite links.*
 
 You're welcome to post your server again provided it is a [permanent link](https://support.discordapp.com/hc/en-us/articles/208866998-Instant-Invite-101).

@@ -336,7 +336,7 @@ def handle_submission(subm):
                         # Remove the newer record
                         database.delete_advert(saved_advert['id'])
                         print(f"  Deleted double-post: {saved_advert['id']}, {saved_advert['permalink']}")
-                                return
+                        return
                     except Exception as excep:
                         print(f'Error encountered while handling double-post:\r\n{excep}\r\n')
                         pass

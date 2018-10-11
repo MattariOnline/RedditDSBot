@@ -220,6 +220,8 @@ def handle_submission(subm):
         for saved_advert in saved_adverts:
             #assert(saved_advert['fullname'] != subm.fullname)
             time_since = saved_advert['posted_at'] - subm.created_utc
+            #time_since_checked_mins = round(time_since_touched / 60)
+            #print(f'  When we checked this about {time_since_checked_mins} minutes ago and it went to {old_group_name_printable}')
             if time_since > 0 and time_since < config.min_time_between_posts_seconds:
                     saved_permalink = saved_advert['permalink']
                     print(f'  Detected that this server was double-posted')
@@ -233,9 +235,6 @@ def handle_submission(subm):
                 #if time_since_touched < config.post_update_time_seconds:
                     #print(f'  Ignoring; We have seen this post before (goes to {old_group_name_printable}) and checked it only {time_since_touched} seconds ago')
                     #return
-
-        time_since_checked_mins = round(time_since_touched / 60)
-        print(f'  When we checked this about {time_since_checked_mins} minutes ago and it went to {old_group_name_printable}')
 
     official_link = subm.url
     if is_whitelisted_redir(official_link):

@@ -208,9 +208,9 @@ def handle_submission(subm):
         return
 
     advert = database.fetch_advert_by_fullname(subm.fullname)
-    #group = None
+    group = None
+    if ((advert is not None) or (if advert)):
     assert(group is not None)
-    #if advert is not None:
     #time_since_touched = time.time() - advert['updated_at']
     group = database.fetch_group_by_id(advert['group_id'])
     #old_group_name_printable = make_printable(group['dgroup_name'])

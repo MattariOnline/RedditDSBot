@@ -40,9 +40,9 @@ If you are certain this bot has made a mistake, and not due to reddit's time est
 Sincerely,
 The r/DiscordServers Team'''
 
-double_post_response_message = '''You made [this post]({perma_link_saved}) for your server before you were supposed to.
+double_post_response_message = '''It looks like you may have double posted as you made [this current post]({perma_link_current}) and [this newer post]({perma_link_saved}) closer together than the rules allow. 
 
-It looks like you may have double posted, so this post is being removed to ensure you aren't violating the rules.
+As we require a specific wait period between a server's posts, the newer post is being removed to ensure you aren't violating the rules.
 
 The live post for your server can be found [here]({perma_link_current}).
 

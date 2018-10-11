@@ -312,6 +312,22 @@ def handle_submission(subm):
             submission.mod.remove(spam=False)
             print('    Done removing')
             return
+        
+        ### START - Test some janky copypasta time checks ###
+        #group = database.fetch_group_by_id(advert['group_id'])
+        saved_adverts = database.fetch_adverts_by_group_id(group['id'])
+
+        for saved_advert in saved_adverts:
+            time_since = saved_advert['posted_at'] - subm.created_utc
+            if time_since > 0 and time_since < config.min_time_between_posts_seconds:
+                    saved_permalink = saved_advert['permalink']
+                    print(f'  Detected that this server was double-posted')
+                    print(f'    Previous saved permalink: {saved_permalink}')
+                    print(f'    Time since: {str(timedelta(seconds=time_since))}')
+                    print('  Replying and deleting...')
+                    reply_and_delete_submission(subm, msg = config.double_post_response_message.format(perma_link_saved = saved_permalink, perma_link_current = subm.permalink, time_left = str(timedelta(seconds=(config.min_time_between_posts_seconds - time_since)))))
+                    return
+        ### END - Test some janky copypasta time checks ###
 
         database.touch_advert(advert['id'])
     else:

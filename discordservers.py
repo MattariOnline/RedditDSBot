@@ -332,10 +332,11 @@ def handle_submission(subm):
                         print(f'    Previous saved permalink: {saved_permalink}')
                         print(f'    Time since: {str(timedelta(seconds=time_since))}')
                         print('  Replying and deleting...')
+                        print(f'  Debug: {saved_subm_id}, {saved_subm.id}')
                         reply_and_delete_submission(saved_subm, msg = config.double_post_response_message.format(perma_link_current = subm.permalink, perma_link_saved = saved_permalink, time_left = str(timedelta(seconds=(config.min_time_between_posts_seconds - time_since)))))
                         # Remove the newer record
                         database.delete_advert(saved_advert['id'])
-                        print(f"  Deleted double-post: {saved_advert['id']}, {saved_advert['permalink']}")
+                        print(f"  Deleted double-post...")
                         return
                     except Exception as excep:
                         print(f'Error encountered while handling double-post:\r\n{excep}\r\n')

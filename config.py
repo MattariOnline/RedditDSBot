@@ -85,8 +85,7 @@ max_posts_until_miss_in_new = 100
 num_hot_posts_to_rescan = 1000
 
 # The time in seconds we wait before we verify a link is still working
-#post_update_time_seconds = 60 * 15
-post_update_time_seconds = 5
+post_update_time_seconds = 60 * 15
 
 min_time_between_posts_seconds = 60 * 60 * 24
 

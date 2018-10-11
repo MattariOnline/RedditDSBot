@@ -40,6 +40,17 @@ If you are certain this bot has made a mistake, and not due to reddit's time est
 Sincerely,
 The r/DiscordServers Team'''
 
+double_post_response_message = '''You made [this post]({perma_link_saved}) for your server before the wait period was up.
+
+The post post for your server can be found [here]({perma_link_current}).
+
+**Time you still need to wait before you can post again: {time_left}**
+
+If you are certain this bot has made a mistake, and not due to reddit's time estimation, please contact us [here](https://www.reddit.com/message/compose?to=%2Fr%2Fdiscordservers).
+
+Sincerely,
+The r/DiscordServers Team'''
+
 loop_sleep_time_seconds = 30
 check_sleep_time_seconds = 5
 loops_per_hot_check = 10

@@ -209,33 +209,16 @@ def handle_submission(subm):
 
     advert = database.fetch_advert_by_fullname(subm.fullname)
     group = None
-    if advert:
-        assert(group is not None)
-        #time_since_touched = time.time() - advert['updated_at']
+    if advert is not None:
+        time_since_touched = time.time() - advert['updated_at']
         group = database.fetch_group_by_id(advert['group_id'])
-        #old_group_name_printable = make_printable(group['dgroup_name'])
-        
-        ### START Test some janky copypasta time checks ###
-        saved_adverts = database.fetch_adverts_by_group_id(group['id'])
+        old_group_name_printable = make_printable(group['dgroup_name'])
+        if time_since_touched < config.post_update_time_seconds:
+            print(f'  Ignoring; We have seen this post before (goes to {old_group_name_printable}) and checked it only {time_since_touched} seconds ago')
+            return
 
-        for saved_advert in saved_adverts:
-            #assert(saved_advert['fullname'] != subm.fullname)
-            time_since = saved_advert['posted_at'] - subm.created_utc
-            #time_since_checked_mins = round(time_since_touched / 60)
-            #print(f'  When we checked this about {time_since_checked_mins} minutes ago and it went to {old_group_name_printable}')
-            if time_since > 0 and time_since < config.min_time_between_posts_seconds:
-                    saved_permalink = saved_advert['permalink']
-                    print(f'  Detected that this server was double-posted')
-                    print(f'    Previous saved permalink: {saved_permalink}')
-                    print(f'    Time since: {str(timedelta(seconds=time_since))}')
-                    print('  Replying and deleting...')
-                    reply_and_delete_submission(subm, msg = config.double_post_response_message.format(perma_link_saved = saved_permalink, perma_link_current = subm.permalink, time_left = str(timedelta(seconds=(config.min_time_between_posts_seconds - time_since)))))
-                    return
-            #else:
-                ### END Test some janky copypasta time checks ###
-                #if time_since_touched < config.post_update_time_seconds:
-                    #print(f'  Ignoring; We have seen this post before (goes to {old_group_name_printable}) and checked it only {time_since_touched} seconds ago')
-                    #return
+        time_since_checked_mins = round(time_since_touched / 60)
+        print(f'  When we checked this about {time_since_checked_mins} minutes ago and it went to {old_group_name_printable}')
 
     official_link = subm.url
     if is_whitelisted_redir(official_link):

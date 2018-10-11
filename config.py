@@ -40,11 +40,13 @@ If you are certain this bot has made a mistake, and not due to reddit's time est
 Sincerely,
 The r/DiscordServers Team'''
 
-double_post_response_message = '''You made [this post]({perma_link_saved}) for your server before the wait period was up.
+double_post_response_message = '''You made [this post]({perma_link_saved}) for your server before you were supposed to.
 
-The post post for your server can be found [here]({perma_link_current}).
+It looks like you may have double posted, so this post is being removed to ensure you aren't violating the rules.
 
-**Time you still need to wait before you can post again: {time_left}**
+The live post for your server can be found [here]({perma_link_current}).
+
+**Time you need to wait before you can post again: {time_left}**
 
 If you are certain this bot has made a mistake, and not due to reddit's time estimation, please contact us [here](https://www.reddit.com/message/compose?to=%2Fr%2Fdiscordservers).
 

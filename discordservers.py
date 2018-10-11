@@ -156,10 +156,10 @@ def reply_and_delete_submission(subm, msg = None, indent = '   '):
         time.sleep(2)
         return
 
-    comment = submission.reply(msg)
+    comment = subm.reply(msg)
     comment.mod.distinguish()
     print(f'{indent}Done replying, removing')
-    submission.mod.remove(spam=False)
+    subm.mod.remove(spam=False)
     print(f'{indent}Done removing')
 
 def make_printable(str):
@@ -328,7 +328,7 @@ def handle_submission(subm):
                     newer_subm = newer_subm[3:]
                 
                 try:
-                    saved_subm = subreddit.submission(id=saved_subm_id);
+                    saved_subm = reddit.submission(id=newer_subm);
                     print(f'  Detected that this server was double-posted')
                     print(f'    Previous saved permalink: {saved_permalink}')
                     print(f'    Time since: {str(timedelta(seconds=time_since))}')

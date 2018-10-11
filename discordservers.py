@@ -338,6 +338,7 @@ def handle_submission(subm):
                                 if (_saved_advert['permalink'] == saved_permalink):
                                     # Remove the newer record
                                     database.delete_advert(_saved_advert['id'])
+                                    print(f"  Deleted double-post: {_saved_advert['id']}")
                                     break
                             return
                         except Exception as excep:

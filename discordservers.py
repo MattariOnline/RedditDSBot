@@ -218,7 +218,7 @@ def handle_submission(subm):
         saved_adverts = database.fetch_adverts_by_group_id(group['id'])
 
         for saved_advert in saved_adverts:
-            assert(saved_advert['fullname'] != subm.fullname)
+            #assert(saved_advert['fullname'] != subm.fullname)
             time_since = saved_advert['posted_at'] - subm.created_utc
             if time_since > 0 and time_since < config.min_time_between_posts_seconds:
                     saved_permalink = saved_advert['permalink']

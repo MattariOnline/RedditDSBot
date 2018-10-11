@@ -340,8 +340,9 @@ def handle_submission(subm):
                                     database.delete_advert(_saved_advert['id'])
                                     break
                             return
-                        except Exception:
-                            print(f'Error Encountered:\r\n{Exception}')
+                        except Exception as excep:
+                            print(f'Error encountered while handling double-post:\r\n{excep}')
+                            pass
         ### END - Test some janky copypasta time checks ###
 
         database.touch_advert(advert['id'])

@@ -13,7 +13,6 @@ import string # for variable "print_safe_name"
 import database
 import math
 from datetime import timedelta
-import re
 
 try:
     import auth_config
@@ -322,25 +321,27 @@ def handle_submission(subm):
             if time_since > 0 and time_since < config.min_time_between_posts_seconds:
                     
                 saved_permalink = saved_advert['permalink']
-                newer_subm = re.search('.*\/comments\/([A-Za-z0-9]+)\/.*', saved_permalink, re.IGNORECASE)
                 
-                if newer_subm:
-                    saved_subm_id = newer_subm.group(1)
-                    try:
-                        saved_subm = reddit.submission(id=saved_subm_id);
-                        print(f'  Detected that this server was double-posted')
-                        print(f'    Previous saved permalink: {saved_permalink}')
-                        print(f'    Time since: {str(timedelta(seconds=time_since))}')
-                        print('  Replying and deleting...')
-                        print(f'  DEBUG: {saved_subm.fullname}')
-                        reply_and_delete_submission(saved_subm, msg = config.double_post_response_message.format(perma_link_current = subm.permalink, perma_link_saved = saved_permalink, time_left = str(timedelta(seconds=(config.min_time_between_posts_seconds - time_since)))))
-                        # Remove the newer record
-                        database.delete_advert(saved_advert['id'])
-                        print(f"  Deleted double-post...")
-                        return
-                    except Exception as excep:
-                        print(f'Error encountered while handling double-post:\r\n{excep}\r\n')
-                        pass
+                # Get post ID for saved advert
+                newer_subm = saved_advert['fullname']
+                if newer_subm.startswith("t3_"):
+                    newer_subm = newer_subm[3:]
+                
+                try:
+                    saved_subm = subreddit.submission(id=saved_subm_id);
+                    print(f'  Detected that this server was double-posted')
+                    print(f'    Previous saved permalink: {saved_permalink}')
+                    print(f'    Time since: {str(timedelta(seconds=time_since))}')
+                    print('  Replying and deleting...')
+                    print(f'  DEBUG: {saved_subm.fullname}')
+                    reply_and_delete_submission(saved_subm, msg = config.double_post_response_message.format(perma_link_current = subm.permalink, perma_link_saved = saved_permalink, time_left = str(timedelta(seconds=(config.min_time_between_posts_seconds - time_since)))))
+                    # Remove the newer record
+                    database.delete_advert(saved_advert['id'])
+                    print(f"  Deleted double-post...")
+                    return
+                except Exception as excep:
+                    print(f'Error encountered while handling double-post:\r\n{excep}\r\n')
+                    pass
                 return
         ### END - Test some janky copypasta time checks ###
 

@@ -328,7 +328,7 @@ def handle_submission(subm):
                     if newer_subm:
                         saved_subm_id = newer_subm.group(1)
                         try:
-                            saved_subm = reddit.Submission(id=saved_subm_id);
+                            saved_subm = reddit.submission(id=saved_subm_id);
                             print(f'  Detected that this server was double-posted')
                             print(f'    Previous saved permalink: {saved_permalink}')
                             print(f'    Time since: {str(timedelta(seconds=time_since))}')

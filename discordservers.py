@@ -313,7 +313,6 @@ def handle_submission(subm):
             print('    Done removing')
             return
         
-        ### START - Test some janky copypasta time checks ###
         saved_adverts = database.fetch_adverts_by_group_id(group['id'])
 
         for saved_advert in saved_adverts:
@@ -335,6 +334,10 @@ def handle_submission(subm):
                     print('  Replying and deleting...')
                     reply_and_delete_submission(saved_subm, msg = config.double_post_response_message.format(perma_link_current = subm.permalink, perma_link_saved = saved_permalink, time_left = str(timedelta(seconds=(config.min_time_between_posts_seconds - time_since)))))
                     # Remove the newer record
+                    if config.dry_run:
+                        print(f'  Would remove database record, but dry-run is set. Waiting 2 seconds instead')
+                        time.sleep(2)
+                        return
                     database.delete_advert(saved_advert['id'])
                     print(f"  Deleted double-post...")
                     return
@@ -342,7 +345,7 @@ def handle_submission(subm):
                     print(f'Error encountered while handling double-post:\r\n{excep}\r\n')
                     pass
                 return
-        ### END - Test some janky copypasta time checks ###
+            
 
         database.touch_advert(advert['id'])
     else:

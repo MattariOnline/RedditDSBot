@@ -155,12 +155,15 @@ def reply_and_delete_submission(subm, msg = None, indent = '   '):
         print(f'{indent}Would reply and remove, but dry-run is set. Waiting 2 seconds instead')
         time.sleep(2)
         return
-
-    comment = subm.reply(msg)
-    comment.mod.distinguish()
-    print(f'{indent}Done replying, removing')
-    subm.mod.remove(spam=False)
-    print(f'{indent}Done removing')
+    try:
+        comment = subm.reply(msg)
+        comment.mod.distinguish()
+        print(f'{indent}Done replying, removing')
+        subm.mod.remove(spam=False)
+        print(f'{indent}Done removing')
+    except Exception as ReplyAndDeleteException:
+        print(f'Error encountered while handling reply-and-delete:\r\n{ReplyAndDeleteException}\r\n')
+        pass
 
 def make_printable(str):
     """Takes a string and makes it printable
@@ -341,8 +344,8 @@ def handle_submission(subm):
                     database.delete_advert(saved_advert['id'])
                     print(f"  Deleted double-post...")
                     return
-                except Exception as excep:
-                    print(f'Error encountered while handling double-post:\r\n{excep}\r\n')
+                except Exception as DoublePostException:
+                    print(f'Error encountered while handling double-post:\r\n{DoublePostException}\r\n')
                     pass
                 return
             

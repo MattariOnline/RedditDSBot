@@ -66,6 +66,10 @@ def is_whitelisted_redir(link):
         or link.startswith('https://discord.plus')
         or (link.startswith('http://discord.me') and not link.startswith('http://discord.me/password/'))
         or (link.startswith('https://discord.me') and not link.startswith('https://discord.me/password/'))
+        or link.startswith('http://discord.link')
+        or link.startswith('https://discord.link')
+        or link.startswith('http://invite.gg')
+        or link.startswith('https://invite.gg')
         or link.startswith('http://discord.st')
         or link.startswith('https://discord.st'))
 

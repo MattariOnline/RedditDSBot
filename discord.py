@@ -10,6 +10,9 @@ from urllib.error import HTTPError
 import urllib
 import json
 
+import time
+import math
+
 API_BASE = 'https://discordapp.com/api/'
 """The base URL for discord api requests"""
 
@@ -69,6 +72,16 @@ def get_invite_from_code(code):
     except HTTPError as err:
         if err.code == 404:
             return False, False, None
-        else:
-            print(f'Got error code {err.code} in HTTPResponse for code {code}')
-            return False, True, None
+        if err.code == 429:
+            if 'X-RateLimit-Reset' in err.headers:
+                reset_time = err.headers['X-RateLimit-Reset']
+                time_to_wait = math.ceil(reset_time - time.time())
+                if time_to_wait <= 0:
+                    print(f'got ratelimited when checking {code} but the reset time is in the past, trying again')
+                    return False, True, None
+                print(f'got ratelimited when checking {code}, need to wait {time_to_wait} seconds before trying again')
+                time.sleep(time_to_wait)
+                return False, True, None
+
+        print(f'Got error code {err.code} in HTTPResponse for code {code}')
+        return False, True, None

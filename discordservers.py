@@ -64,8 +64,6 @@ def is_whitelisted_redir(link):
 
     return (link.startswith('http://discord.plus')
         or link.startswith('https://discord.plus')
-        or (link.startswith('http://discord.me') and not link.startswith('http://discord.me/password/'))
-        or (link.startswith('https://discord.me') and not link.startswith('https://discord.me/password/'))
         or link.startswith('http://discord.link')
         or link.startswith('https://discord.link')
         or link.startswith('http://invite.gg')
@@ -150,10 +148,7 @@ def reply_and_delete_submission(subm, msg = None, indent = '   '):
     """
 
     if msg is None:
-        if (subm.url.startswith('http://discord.me') or subm.url.startswith('https://discord.me')):
-            msg = config.response_message_botcheck
-        else:
-            msg = config.response_message
+        msg = config.response_message
 
     if config.dry_run:
         print(f'{indent}Would reply and remove, but dry-run is set. Waiting 2 seconds instead')

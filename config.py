@@ -37,9 +37,9 @@ If you are certain this bot has made a mistake, and not due to reddit's time est
 Sincerely,
 The r/DiscordServers Team'''
 
-loop_sleep_time_seconds = 30
+loop_sleep_time_seconds = 60 * 10
 #check_sleep_time_seconds = 5
-check_sleep_time_seconds = 60
+check_sleep_time_seconds = 30
 loops_per_hot_check = 10
 flair_id = '3c0343d0-3daa-11e6-b5ea-0e43c84e73c3'
 
@@ -63,15 +63,15 @@ flair_id = '3c0343d0-3daa-11e6-b5ea-0e43c84e73c3'
 # (610 seconds / slowest loop) * (1 loop / 10 posts) = 61 seconds/post
 # at peak
 # max 1000
-max_posts_until_miss_in_new = 100
+max_posts_until_miss_in_new = 50
 
 # how many hot posts we ensure are valid. Posts after this in hot
 # may become invalid without the bot noticing. max 1000.
-num_hot_posts_to_rescan = 1000
+num_hot_posts_to_rescan = 300
 
 # The time in seconds we wait before we verify a link is still working
 #post_update_time_seconds = 0
-post_update_time_seconds = 60 * 10
+post_update_time_seconds = 60 * 60
 
 min_time_between_posts_seconds = 60 * 60 * 24
 

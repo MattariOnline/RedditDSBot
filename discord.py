@@ -62,6 +62,7 @@ def get_invite_from_code(code):
     req.add_header('Accept', 'application/json')
     req.add_header('Content-Type', 'application/x-www-form-urlencoded')
     req.add_header('User-Agent', USER_AGENT)
+    req.add_header('Authorization', 'Bot NTkyMjAwODQ2MjQzMjY2NTkw.XQ74OQ.Oafs1hFDzSt7pEwH8kKtly4PUo0')
     try:
         with urlopen(req) as res:
             data = json.loads(res.read().decode('utf-8'))

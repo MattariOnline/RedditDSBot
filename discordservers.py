@@ -208,6 +208,11 @@ def handle_submission(subm):
     if not is_discord_or_discord_redirect_link(subm.url):
         print(f'  Ignoring; the submission links to {subm.url} which is unrecognized')
         return
+        
+    if subm.score > 5:
+        print('This submission has a score of {subm.score}! Removing..')
+        submission.mod.remove(spam=False)
+        print('    Done removing')
 
     advert = database.fetch_advert_by_fullname(subm.fullname)
     group = None
@@ -260,17 +265,17 @@ def handle_submission(subm):
         msg = f'The user u/{subm.author.name if subm.author else None} tried making [this post]({subm.permalink}) for the banned server **{guild_name}** (Server ID: {guild_id}) in DiscordServers and was just caught by the bot.'
         subreddit.modmail.create('Blacklisted server attempting to post!', msg, 'SubredditGuardian')
         print('    Done sending, removing')
-        submission.mod.remove(spam=False)
+        subm.mod.remove(spam=False)
         print('    Done removing')
         return
 
     if 'VIP_REGIONS' in invite['guild']['features']:
         print(f'  Detected that the server has VIP features')
-        if (    submission.link_flair_text != 'Discord Partner'
-             or submission.link_flair_css_class != 'partner-post'
+        if (    subm.link_flair_text != 'Discord Partner'
+             or subm.link_flair_css_class != 'partner-post'
         ):
             if not config.dry_run:
-                submission.flair.select(config.flair_id)
+                subm.flair.select(config.flair_id)
                 print('    Flaired post as Discord Partner!')
             else:
                 print('    Would have flaired as Discord Partner but this is a dry-run')
@@ -311,7 +316,7 @@ def handle_submission(subm):
             msg = f'The user u/{subm.author.name if subm.author else None} made [this post](reddit.com{subm.permalink}) which changed from a link to {old_print_safe_name} (Server ID = {old_guild_id}) to {print_safe_name} (Server ID = {guild_id}). This is peculiar. I will delete it with no comment'
             subreddit.modmail.create('Server link changed servers', msg, 'SubredditGuardian')
             print('    Done sending, removing')
-            submission.mod.remove(spam=False)
+            subm.mod.remove(spam=False)
             print('    Done removing')
             return
         

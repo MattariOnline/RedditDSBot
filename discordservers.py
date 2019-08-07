@@ -269,7 +269,7 @@ def handle_submission(subm):
         print('    Done removing')
         return
 
-    if 'VIP_REGIONS' in invite['guild']['features']:
+    if 'PARTNERED' in invite['guild']['features']:
         print(f'  Detected that the server has VIP features')
         if (    subm.link_flair_text != 'Discord Partner'
              or subm.link_flair_css_class != 'partner-post'
